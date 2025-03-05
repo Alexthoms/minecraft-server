@@ -1,0 +1,22 @@
+tasks:
+  - name: Install Docker
+    init: |
+      sudo apt update
+      sudo apt install -y docker.io docker-compose
+      sudo systemctl enable docker
+      sudo systemctl start docker
+
+  - name: Install Pterodactyl
+    command: |
+      docker volume create pterodata
+      docker run -d --name pterodactyl --restart always \
+      -v pterodata:/var/www/pterodactyl \
+      -p 8080:80 ubuntu
+
+  - name: Anti-AFK
+    command: |
+      while true; do echo "Anti-AFK" >> /dev/null; sleep 240; done &
+
+ports:
+  - port: 8080
+    onOpen: open-preview
